@@ -21,16 +21,18 @@
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       margin-bottom: 20px;
     }
 
     p {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       margin-bottom: 30px;
+      line-height: 1.5;
     }
 
     button {
@@ -62,8 +64,11 @@
 <body>
 
   <div class="card" id="card">
-    <h1>💖 Will You Be My Valentine? 💖</h1>
-    <p>You make every day special. Would you make this Valentine’s Day even more special?</p>
+    <h1>💖 Medha, Will You Be My Valentine? 💖</h1>
+    <p>
+      Medha, you make my world brighter just by being in it.
+      Would you make this Valentine’s Day unforgettable with me? 🌹
+    </p>
 
     <button id="yes" onclick="sayYes()">Yes 💕</button>
     <button id="no" onmouseover="moveNo()">No 💔</button>
@@ -72,9 +77,11 @@
   <script>
     function sayYes() {
       document.getElementById("card").innerHTML = `
-        <h1>🥰 Yayyy!!! 🥰</h1>
-        <p>I knew you’d say yes! ❤️<br>
-        Can’t wait to spend Valentine’s Day with you 💐</p>
+        <h1>🥰 Yayyy Medha!!! 🥰</h1>
+        <p>
+          I knew you’d say yes ❤️<br>
+          Happy Valentine’s Day, my Valentine 💐
+        </p>
       `;
     }
 
