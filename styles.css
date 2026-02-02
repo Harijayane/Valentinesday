@@ -1,0 +1,160 @@
+:root{
+  --bg1: #ff9a9e;
+  --bg2: #fad0c4;
+  --accent: #ff416c;
+  --accent-dark: #c21845;
+  --card-bg: rgba(255,255,255,0.85);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Montserrat', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#3b2b2b;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:24px;
+}
+
+/* Card */
+.card{
+  background:var(--card-bg);
+  padding:28px;
+  border-radius:18px;
+  max-width:520px;
+  width:100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  text-align:center;
+  position:relative;
+}
+
+/* Titles */
+.title{
+  font-size:1.9rem;
+  margin:0;
+  font-weight:700;
+  letter-spacing:0.4px;
+}
+.subtitle{
+  margin:6px 0 18px;
+  font-family: 'Great Vibes', cursive;
+  font-size:1.65rem;
+  color:var(--accent-dark);
+}
+
+/* Heart */
+.heart-wrap{
+  display:flex;
+  justify-content:center;
+  margin:6px 0 14px;
+}
+.heart{
+  width:120px;
+  height:120px;
+  position:relative;
+  transform:rotate(-45deg);
+  background:linear-gradient(180deg,var(--accent),#ff758c);
+  border-radius:16px 16px 0 0;
+  animation:beat 1.05s infinite ease-in-out;
+  cursor:pointer;
+  box-shadow: 0 8px 30px rgba(197,22,71,0.25), inset 0 -6px 12px rgba(255,255,255,0.12);
+}
+.heart::before,
+.heart::after{
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  background:linear-gradient(180deg,var(--accent),#ff758c);
+  border-radius:50%;
+}
+.heart::before{ top:-60px; left:0; }
+.heart::after{ left:60px; top:0; }
+
+@keyframes beat{
+  0%,100%{ transform:rotate(-45deg) scale(1) }
+  50%{ transform:rotate(-45deg) scale(1.08) }
+}
+
+/* Buttons */
+.buttons{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:12px }
+.btn{
+  padding:10px 18px;
+  border-radius:10px;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+.btn:active{ transform:translateY(2px) }
+.btn-yes{ background:linear-gradient(180deg,#ffb3c7,#ff6b91); color:white }
+.btn-no{ background:#f3f3f3; color:#444 }
+.btn-surprise{ background:linear-gradient(90deg,#ffd27f,#ff8a6b); color:#2b1b1b }
+
+/* Note */
+.note{ font-size:0.9rem; color:#6b4b4b; margin-top:14px }
+
+/* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.35);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+}
+.modal[aria-hidden="false"]{ opacity:1; pointer-events:auto }
+.modal-content{
+  background:white;
+  padding:22px;
+  border-radius:12px;
+  max-width:420px;
+  width:90%;
+  text-align:center;
+  position:relative;
+  box-shadow:0 20px 40px rgba(0,0,0,0.18)
+}
+.close{
+  position:absolute;
+  right:10px;
+  top:6px;
+  border:0;
+  background:transparent;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* Modal text large */
+.modal-text{ font-size:1.25rem; padding:10px 6px }
+
+/* Confetti pieces */
+#confetti{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:9999 }
+.confetti-piece{
+  position:absolute;
+  width:10px;
+  height:18px;
+  opacity:0.95;
+  transform-origin:center;
+  will-change:transform, top, left;
+  border-radius:2px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{ transform: translateY(110vh) rotate(720deg); opacity:0.9 }
+}
+
+/* Responsive */
+@media (max-width:420px){
+  .heart{ width:92px; height:92px }
+  .heart::before, .heart::after{ width:92px; height:92px }
+  .title{ font-size:1.3rem }
+}

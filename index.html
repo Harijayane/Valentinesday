@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my Valentine?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="wrap" role="main">
+    <div class="card">
+      <h1 class="title">Will you be my Valentine?</h1>
+      <p class="subtitle">Harijayane</p>
+
+      <div class="heart-wrap" aria-hidden="true">
+        <div class="heart"></div>
+      </div>
+
+      <div class="buttons">
+        <button id="yes" class="btn btn-yes" aria-label="Yes, I will">Yes</button>
+        <button id="no" class="btn btn-no" aria-label="No, thanks">No</button>
+        <button id="surprise" class="btn btn-surprise" aria-label="A surprise">A little surprise</button>
+      </div>
+
+      <p class="note">Click the heart or choose an answer.</p>
+    </div>
+  </main>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <button id="close" class="close" aria-label="Close">&times;</button>
+      <div id="modal-text" class="modal-text"></div>
+    </div>
+  </div>
+
+  <div id="confetti"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
