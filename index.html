@@ -21,6 +21,13 @@
       overflow: hidden;
     }
 
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .card {
       background: rgba(255,255,255,0.18);
       backdrop-filter: blur(14px);
@@ -62,9 +69,7 @@
       transition: 0.2s ease;
     }
 
-    button:hover {
-      transform: translateY(-3px);
-    }
+    button:hover { transform: translateY(-3px); }
 
     #yes {
       background: linear-gradient(135deg, #ff4d6d, #ff1e4d);
@@ -88,27 +93,35 @@
     }
 
     @keyframes pandaBounce {
-      0%, 100% { transform: translateY(0); }
+      0%,100% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
     }
 
-    /* 🎉 Confetti */
-    .confetti {
+    /* 💌 Floating hearts (letter page only) */
+    .heart {
       position: fixed;
-      width: 10px;
-      height: 10px;
-      background: red;
-      animation: confettiFall 3s linear forwards;
+      font-size: 1.5rem;
+      animation: heartFloat 6s linear forwards;
+      pointer-events: none;
+      opacity: 0.85;
       z-index: 1;
     }
 
-    @keyframes confettiFall {
-      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    @keyframes heartFloat {
+      from { transform: translateY(100vh) scale(0.8); opacity: 1; }
+      to   { transform: translateY(-10vh) scale(1.2); opacity: 0; }
     }
   </style>
 </head>
 <body>
+
+  <!-- 🎆 Fireworks canvas -->
+  <canvas id="fireworks"></canvas>
+
+  <!-- 🎶 Music (autoplay-safe) -->
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_9b5a3f7c45.mp3" type="audio/mpeg">
+  </audio>
 
   <div class="card" id="card">
     <h1>💖 Will You Be My Valentine cutuuu Panda 🐼?? 💖</h1>
@@ -124,8 +137,94 @@
   </div>
 
   <script>
+    /* ---------- Fireworks ---------- */
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    let W, H, fireworks = [], particles = [], fwInterval;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function Firework() {
+      this.x = Math.random() * W;
+      this.y = H;
+      this.targetY = Math.random() * H * 0.4 + H * 0.1;
+      this.speed = 4 + Math.random() * 2;
+      this.color = `hsl(${Math.random()*360},100%,60%)`;
+    }
+
+    Firework.prototype.update = function () {
+      this.y -= this.speed;
+      if (this.y <= this.targetY) {
+        explode(this.x, this.y, this.color);
+        return true;
+      }
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, 2, 2);
+      return false;
+    };
+
+    function Particle(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random() - 0.5) * 6;
+      this.vy = (Math.random() - 0.5) * 6;
+      this.life = 60;
+      this.color = color;
+    }
+
+    function explode(x, y, color) {
+      for (let i = 0; i < 40; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, W, H);
+
+      fireworks = fireworks.filter(fw => !fw.update());
+
+      particles = particles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.life--;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, 2, 2);
+        return p.life > 0;
+      });
+
+      requestAnimationFrame(animateFireworks);
+    }
+
+    function startFireworks() {
+      if (fwInterval) return;
+      fwInterval = setInterval(() => fireworks.push(new Firework()), 500);
+      animateFireworks();
+    }
+
+    /* ---------- Hearts ---------- */
+    let heartInterval;
+    function startHearts() {
+      heartInterval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+      }, 500);
+    }
+
+    /* ---------- Actions ---------- */
     function sayYes() {
-      launchConfetti();
+      startFireworks();
+      playMusic();
 
       document.getElementById("card").innerHTML = `
         <h1>🥰 Yayyy Medha!!! 🥰</h1>
@@ -135,7 +234,6 @@
         </p>
 
         <button id="Open" onclick="clickme()">click me 💕</button>
-
         <div class="panda">🐼</div>
       `;
     }
@@ -143,9 +241,7 @@
     function clickme() {
       document.getElementById("card").innerHTML = `
         <h1>🥰 Here is the letter for my love!!! 🥰</h1>
-        <p>
-          My Dearest Medha,
-        </p>
+        <p>My Dearest Medha,</p>
         <p>
           Every moment with you feels like a beautiful dream I never want to wake from.
           Your smile lights up my world in ways words can't describe.
@@ -154,15 +250,11 @@
           You've made my life infinitely more beautiful, more meaningful, more complete.
           Love you so much cutuuu
         </p>
-        <p>
-          With all my heart,
-        </p>
-        <p>
-          TuiTui
-        </p>
-
+        <p>With all my heart,</p>
+        <p>TuiTui</p>
         <div class="panda">🐼</div>
       `;
+      startHearts();
     }
 
     function moveNo() {
@@ -172,18 +264,10 @@
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
 
-    function launchConfetti() {
-      for (let i = 0; i < 80; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.background =
-          ["#ff4d6d", "#ffd166", "#06d6a0", "#4cc9f0"][Math.floor(Math.random() * 4)];
-        confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
-        document.body.appendChild(confetti);
-
-        setTimeout(() => confetti.remove(), 3000);
-      }
+    function playMusic() {
+      const music = document.getElementById("bgMusic");
+      music.volume = 0.3;
+      music.play().catch(() => {});
     }
   </script>
 
