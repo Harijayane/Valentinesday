@@ -119,9 +119,9 @@
   <canvas id="fireworks"></canvas>
 
   <!-- 🎶 Music (autoplay-safe) -->
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_9b5a3f7c45.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bgMusic" loop muted>
+  <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_9b5a3f7c45.mp3" type="audio/mpeg">
+</audio>
 
   <div class="card" id="card">
     <h1>💖 Will You Be My Valentine cutuuu Panda 🐼?? 💖</h1>
@@ -265,10 +265,14 @@
     }
 
     function playMusic() {
-      const music = document.getElementById("bgMusic");
-      music.volume = 0.3;
-      music.play().catch(() => {});
-    }
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.3;
+  music.muted = false;
+  const playPromise = music.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {});
+  }
+}
   </script>
 
 </body>
