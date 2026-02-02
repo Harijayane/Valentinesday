@@ -1,16 +1,15 @@
-// Simple interactions and confetti
+// Interactions: evasive No button and Yes with special message + confetti
 const yesBtn = document.getElementById('yes');
 const noBtn = document.getElementById('no');
-const surpriseBtn = document.getElementById('surprise');
 const heart = document.querySelector('.heart');
 const modal = document.getElementById('modal');
 const modalText = document.getElementById('modal-text');
 const closeBtn = document.getElementById('close');
 const confettiRoot = document.getElementById('confetti');
+const card = document.getElementById('card');
+const buttonsContainer = document.getElementById('buttons');
 
-// Customize this text (or I'll do it for you)
 const askerName = 'Harijayane';
-const targetNamePlaceholder = ''; // e.g. 'Emma' — you can set it here or leave blank
 
 function openModal(text){
   modalText.innerHTML = text;
@@ -20,68 +19,103 @@ function closeModal(){
   modal.setAttribute('aria-hidden','true');
   clearConfetti();
 }
-
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-function launchConfetti(cnt = 80){
+function launchConfetti(cnt = 100){
   const colors = ['#ff3b6b','#ffd166','#ff8fab','#8ee3c6','#8ec5ff','#d7a9ff'];
   const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-
   for(let i=0;i<cnt;i++){
     const el = document.createElement('div');
     el.className = 'confetti-piece';
     el.style.background = colors[Math.floor(Math.random()*colors.length)];
     el.style.left = (Math.random()*vw) + 'px';
     el.style.top = (Math.random()*-20 - 10) + 'vh';
-    el.style.width = (8 + Math.random()*10) + 'px';
-    el.style.height = (12 + Math.random()*16) + 'px';
+    el.style.width = (8 + Math.random()*12) + 'px';
+    el.style.height = (12 + Math.random()*18) + 'px';
     el.style.transform = `rotate(${Math.random()*360}deg)`;
-    el.style.opacity = 0.95;
-    // random duration and delay
-    const dur = 2.6 + Math.random()*2.2;
+    const dur = 2.6 + Math.random()*2.8;
     el.style.animationDuration = dur + 's';
-    el.style.animationDelay = (Math.random()*0.15) + 's';
+    el.style.animationDelay = (Math.random()*0.2) + 's';
     confettiRoot.appendChild(el);
-    // remove after animation
     setTimeout(()=> el.remove(), (dur + 0.6) * 1000);
   }
 }
+function clearConfetti(){ confettiRoot.innerHTML = ''; }
 
-function clearConfetti(){
-  confettiRoot.innerHTML = '';
-}
-
+// Yes action: show loving message
 function yesAction(){
-  heart.classList.add('big');
-  const nameText = targetNamePlaceholder ? `, ${targetNamePlaceholder}` : '';
-  openModal(`<strong>Yes!</strong> ${askerName} is so happy${nameText} ❤️<div style="font-size:0.9rem;margin-top:8px">I can't wait to see you!</div>`);
-  launchConfetti(120);
+  openModal(`<div style="font-family: 'Great Vibes', cursive; font-size:2rem; color:var(--accent-dark)">I love you soooo much ❤️</div><div style="margin-top:8px;font-size:0.95rem">- ${askerName}</div>`);
+  launchConfetti(160);
 }
 
-function noAction(){
-  openModal(`<strong>It's okay.</strong> ${askerName} still cares a lot. 💌`);
+// No button: evade attempts to click
+function moveNoButton(){
+  // ensure container has positioning so absolute moves are inside it
+  buttonsContainer.classList.add('positioned');
+
+  const container = card.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const btnWidth = btnRect.width;
+  const btnHeight = btnRect.height;
+
+  // compute safe area inside card where button can go
+  const padding = 12;
+  const minX = container.left + padding;
+  const maxX = container.right - btnWidth - padding;
+  const minY = container.top + padding + 90; // leave room for title/heart
+  const maxY = container.bottom - btnHeight - padding - 20;
+
+  // fallback small nudges if not enough space
+  if(maxX <= minX || maxY <= minY){
+    noBtn.style.transform = `translate(${(Math.random()*80-40)}px, ${(Math.random()*36-18)}px)`;
+    setTimeout(()=> noBtn.style.transform = '', 700);
+    return;
+  }
+
+  // choose a point inside the allowed rectangle
+  const x = Math.random() * (maxX - minX) + minX;
+  const y = Math.random() * (maxY - minY) + minY;
+
+  const left = x - container.left;
+  const top = y - container.top;
+
+  // set absolute positioning relative to the card's content box
+  // make sure the button stays visible and doesn't overflow
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = `${Math.max(8, Math.min(left, container.width - btnWidth - 8))}px`;
+  noBtn.style.top = `${Math.max(8, Math.min(top, container.height - btnHeight - 8))}px`;
+  noBtn.style.transform = ''; // reset any translate
 }
 
-function surpriseAction(){
-  openModal(`<strong>Surprise!</strong> A kiss and a picnic? 🧺🌹`);
-  launchConfetti(70);
-}
+// Attach handlers to evade on mouseenter and focus (keyboard)
+noBtn.addEventListener('mouseenter', moveNoButton);
+noBtn.addEventListener('focus', moveNoButton);
+noBtn.addEventListener('click', (e)=>{
+  // prevent clicking No; bounce it away
+  e.preventDefault();
+  moveNoButton();
+});
 
+// Yes button and heart both accept and show message
 yesBtn.addEventListener('click', yesAction);
-noBtn.addEventListener('click', noAction);
-surpriseBtn.addEventListener('click', surpriseAction);
-
-// Make heart clickable to trigger yes
 heart.addEventListener('click', yesAction);
 
-// Optional gentle heart bounce when modal shows success
+// observe modal to pulse heart on success
 const observer = new MutationObserver((records)=>{
   records.forEach(r=>{
     if(r.target.getAttribute('aria-hidden') === 'false'){
-      // bounce heart once
-      heart.animate([{ transform: 'rotate(-45deg) scale(1)' }, { transform: 'rotate(-45deg) scale(1.12)' }, { transform: 'rotate(-45deg) scale(1)' }], { duration: 650 });
+      heart.animate([{ transform: 'rotate(-45deg) scale(1)' }, { transform: 'rotate(-45deg) scale(1.14)' }, { transform: 'rotate(-45deg) scale(1)' }], { duration: 700 });
     }
   });
 });
 observer.observe(modal, { attributes: true, attributeFilter: ['aria-hidden'] });
+
+// reset no button positioning on resize to avoid being out-of-bounds
+window.addEventListener('resize', ()=>{
+  noBtn.style.position = '';
+  noBtn.style.left = '';
+  noBtn.style.top = '';
+  noBtn.style.transform = '';
+  buttonsContainer.classList.remove('positioned');
+});
