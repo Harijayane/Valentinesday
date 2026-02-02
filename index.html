@@ -3,10 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Be My Valentine ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #ff758c, #ff7eb3);
       display: flex;
       align-items: center;
@@ -14,50 +20,99 @@
       font-family: 'Arial', sans-serif;
       color: white;
       text-align: center;
+      overflow: hidden;
+    }
+
+    /* floating hearts background */
+    body::before {
+      content: "💖 💕 💗 💘 💓";
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.15;
+      animation: float 20s linear infinite;
+      white-space: nowrap;
+      top: 10%;
+      left: -50%;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(200%); }
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      max-width: 400px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px);
+      padding: 40px 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      max-width: 420px;
+      width: 90%;
+      animation: popIn 0.8s ease;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.85) translateY(20px);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
     }
 
     h1 {
-      font-size: 2.4rem;
-      margin-bottom: 20px;
+      font-size: 2.3rem;
+      margin-bottom: 18px;
+      line-height: 1.2;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
     p {
-      font-size: 1.15rem;
-      margin-bottom: 30px;
-      line-height: 1.5;
+      font-size: 1.1rem;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      margin-top: 10px;
     }
 
     button {
       font-size: 1.1rem;
-      padding: 12px 25px;
+      padding: 14px 28px;
       border: none;
-      border-radius: 30px;
+      border-radius: 999px;
       cursor: pointer;
       margin: 10px;
-      transition: 0.3s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.25);
     }
 
     #yes {
-      background: #ff4d6d;
+      background: linear-gradient(135deg, #ff4d6d, #ff1e4d);
       color: white;
-    }
-
-    #yes:hover {
-      background: #ff1e4d;
     }
 
     #no {
       background: white;
       color: #ff4d6d;
       position: relative;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.9rem;
+      }
+      p {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -70,8 +125,10 @@
       Would you make this Valentine’s Day unforgettable with me? 🌹
     </p>
 
-    <button id="yes" onclick="sayYes()">Yes 💕</button>
-    <button id="no" onmouseover="moveNo()">No 💔</button>
+    <div class="buttons">
+      <button id="yes" onclick="sayYes()">Yes 💕</button>
+      <button id="no" onmouseover="moveNo()">No 💔</button>
+    </div>
   </div>
 
   <script>
@@ -112,8 +169,8 @@
 
     function moveNo() {
       const noBtn = document.getElementById("no");
-      const x = Math.random() * 200 - 100;
-      const y = Math.random() * 200 - 100;
+      const x = Math.random() * 220 - 110;
+      const y = Math.random() * 220 - 110;
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
   </script>
