@@ -1,58 +1,90 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Will you be my Valentine?</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Be My Valentine ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    button {
+      font-size: 1.1rem;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #yes:hover {
+      background: #ff1e4d;
+    }
+
+    #no {
+      background: white;
+      color: #ff4d6d;
+      position: relative;
+    }
+  </style>
 </head>
 <body>
-  <div class="scene">
-    <!-- Decorative Eiffel Tower SVG in the background -->
-    <svg class="eiffel" viewBox="0 0 300 600" aria-hidden="true" preserveAspectRatio="xMidYMax slice">
-      <defs>
-        <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#ff9a9e" />
-          <stop offset="100%" stop-color="#fecfef" />
-        </linearGradient>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#g1)" />
-      <g transform="translate(60,20) scale(0.9)" fill="rgba(0,0,0,0.12)">
-        <!-- simplified Eiffel silhouette -->
-        <path d="M80 0 L100 0 L140 160 L160 160 L120 200 L130 220 L80 220 L90 200 L50 160 L70 160 Z"/>
-        <rect x="74" y="220" width="12" height="60"/>
-      </g>
-    </svg>
 
-    <main class="wrap" role="main">
-      <div class="card" id="card">
-        <h1 class="title">Will you be my valentine?</h1>
-        <p class="subtitle">From <strong>Harijayane</strong></p>
+  <div class="card" id="card">
+    <h1>💖 Will You Be My Valentine? 💖</h1>
+    <p>You make every day special. Would you make this Valentine’s Day even more special?</p>
 
-        <div class="heart-wrap" aria-hidden="true">
-          <div class="heart" title="Tap the heart"></div>
-        </div>
-
-        <div class="buttons" id="buttons" aria-hidden="false">
-          <button id="yes" class="btn btn-yes" aria-label="Yes, I will">Yes</button>
-          <button id="no" class="btn btn-no" aria-label="No, thanks">No</button>
-        </div>
-
-        <p class="note">Pick an answer — but be careful with the No button 😉</p>
-      </div>
-    </main>
-
-    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="modal-content">
-        <button id="close" class="close" aria-label="Close">&times;</button>
-        <div id="modal-text" class="modal-text"></div>
-      </div>
-    </div>
-
-    <div id="confetti"></div>
+    <button id="yes" onclick="sayYes()">Yes 💕</button>
+    <button id="no" onmouseover="moveNo()">No 💔</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function sayYes() {
+      document.getElementById("card").innerHTML = `
+        <h1>🥰 Yayyy!!! 🥰</h1>
+        <p>I knew you’d say yes! ❤️<br>
+        Can’t wait to spend Valentine’s Day with you 💐</p>
+      `;
+    }
+
+    function moveNo() {
+      const noBtn = document.getElementById("no");
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 200 - 100;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+  </script>
+
 </body>
 </html>
